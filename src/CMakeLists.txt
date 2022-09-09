@@ -1,0 +1,5 @@
+add_subdirectory(tree_node)
+add_subdirectory(renderer)
+add_subdirectory(app)
+add_subdirectory(glad)
+add_subdirectory(window)
