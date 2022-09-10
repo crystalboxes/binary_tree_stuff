@@ -1,3 +1,13 @@
+# binary_tree_stuff
+
+A repository for testing binary tree problems from leetcode. Renders trees with cairo and OpenGL.
+
+## Platforms that were tested
+
+- [x] macOS (arm)
+- [ ] Windows
+- [ ] Linux
+
 ## Compiling to emscripten
 
 ```
