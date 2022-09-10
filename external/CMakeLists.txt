@@ -33,11 +33,18 @@ function(UpdateExternalLib name url rev)
 endfunction()
 
 UpdateExternalLib("cairo-cmake-static" "https://github.com/crystalboxes/cairo-cmake-static.git" "f658c250d09dfeaaabb3a12b1afb4443c87f30ea")
-UpdateExternalLib("glfw" "https://github.com/glfw/glfw.git" "6b57e08bb0078c9834889eab871bac2368198c15")
-# Configure glfw
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
-option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
-option(GLFW_INSTALL "Generate installation target" OFF)
 
-add_subdirectory(glfw)
+if(NOT EMSCRIPTEN)
+
+  UpdateExternalLib("glfw" "https://github.com/glfw/glfw.git" "6b57e08bb0078c9834889eab871bac2368198c15")
+
+  # Configure glfw
+  option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+  option(GLFW_BUILD_DOCS "Build the GLFW documentation" OFF)
+  option(GLFW_INSTALL "Generate installation target" OFF)
+
+  add_subdirectory(glfw)
+
+endif()
+
 add_subdirectory(cairo-cmake-static)

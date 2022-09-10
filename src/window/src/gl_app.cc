@@ -1,4 +1,6 @@
 #include "gl_app.h"
+#include "gl.h"
+#include <functional>
 
 namespace window {
 void GLApp::init() {
@@ -24,9 +26,25 @@ void GLApp::render_loop() {
   glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+std::function<void()> loop;
+void main_loop() {
+  loop();
+}
+
 void GLApp::run() {
-  while (glfw_instance.loop()) {
+  loop = [&] {
     render_loop();
+    glfw_instance.loop();
+  };
+
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(main_loop, 0, true);
+#else
+  while (!glfw_instance.should_close()) {
+    main_loop();
   }
+#endif
+
+  glfw_instance.terminate();
 }
 }  // namespace window

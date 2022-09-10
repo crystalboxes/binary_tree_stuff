@@ -8,7 +8,7 @@ int main() {
   auto node = TreeNodeLoader::from_string(tree);
 
   std::cout << tree_node::compute_height(node);
-  
+
   renderer::render_tree_node(node, "test.png");
   renderer::render_to_window(node);
 

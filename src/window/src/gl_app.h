@@ -1,5 +1,4 @@
 #pragma once
-#include <glad/glad.h>
 #include <window/window.h>
 #include "glfw_instance.h"
 

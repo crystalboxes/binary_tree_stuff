@@ -1,6 +1,8 @@
 #include "render_context.h"
 #include <cairo.h>
 #include <stdlib.h>
+#include <stdint.h>
+
 
 namespace renderer {
 

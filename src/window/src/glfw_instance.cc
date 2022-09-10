@@ -1,4 +1,6 @@
 #include "glfw_instance.h"
+#include "gl.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -32,7 +34,10 @@ void GlfwInstance::init_window(int width, int height, const char* window_name) {
   }
   glfwSetKeyCallback(window, key_callback);
   glfwMakeContextCurrent(window);
+#ifdef __EMSCRIPTEN__
+#else
   gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+#endif
   glfwSwapInterval(1);
 
   this->width = width;
@@ -42,16 +47,19 @@ void GlfwInstance::get_viewport_dimensions(int32_t& out_width,
                                            int32_t& out_height) {
   glfwGetFramebufferSize(window, &out_width, &out_height);
 }
-bool GlfwInstance::loop() {
-  if (glfwWindowShouldClose(window)) {
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    return false;
-  }
 
+bool GlfwInstance::should_close() {
+  return glfwWindowShouldClose(window);
+}
+
+void GlfwInstance::terminate() {
+  glfwDestroyWindow(window);
+  glfwTerminate();
+}
+
+void GlfwInstance::loop() {
   glfwSwapBuffers(window);
   glfwPollEvents();
-  return true;
 }
 
 GlfwInstance::~GlfwInstance() {
