@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 namespace window {
 
@@ -83,8 +84,9 @@ void GlfwInstance::set_frame_texture(unsigned char* data,
   }
   glBindTexture(GL_TEXTURE_2D, frame_texture);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_width, texture_height, 0,
@@ -124,6 +126,9 @@ void main() {\
 ";
 
 static const char* fragment_shader_str =
+#ifdef __EMSCRIPTEN__
+    "precision mediump float;\n"
+#endif
     "\
 varying vec2 Uv; \
 uniform sampler2D Frame; \
@@ -133,14 +138,35 @@ void main() {\
 }\
 ";
 
+void check_error(GLuint shader) {
+  GLint result;
+  glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
+  if (result == GL_FALSE) {
+    GLint log_length;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
+    std::vector<GLchar> log(log_length);
+
+    GLsizei length;
+    glGetShaderInfoLog(shader, log.size(), &length, log.data());
+
+    error_callback(0, log.data());
+  }
+}
+
 void GlfwInstance::compile_shaders() {
   GLuint vertex_shader, fragment_shader;
   vertex_shader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertex_shader, 1, &vertex_shader_str, NULL);
   glCompileShader(vertex_shader);
+
+  check_error(vertex_shader);
+
   fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fragment_shader, 1, &fragment_shader_str, NULL);
   glCompileShader(fragment_shader);
+
+  check_error(fragment_shader);
+
   program = glCreateProgram();
   glAttachShader(program, vertex_shader);
   glAttachShader(program, fragment_shader);

@@ -15,6 +15,7 @@ void GLApp::render_loop() {
 
   glViewport(0, 0, viewport_x, viewport_y);
   glClear(GL_COLOR_BUFFER_BIT);
+  glClearColor(1, 0,0,1);
 
   glUseProgram(glfw_instance.get_program());
   glActiveTexture(GL_TEXTURE0);
