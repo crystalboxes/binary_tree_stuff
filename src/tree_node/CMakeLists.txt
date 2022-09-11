@@ -4,13 +4,11 @@ add_library(
   include/tree_node/tree_node.h
   include/tree_node/loader.h
   include/tree_node/helpers.h
+  include/tree_node/codec.h
   src/helpers.cc
-  src/linked_list.h
-  src/linked_list.cc
-  src/tree_deserializer.cc
-  src/tree_deserializer.h
   src/tree_node.cc
   src/loader.cc
+  src/codec.cc
 )
 
 target_include_directories(tree_node
