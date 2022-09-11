@@ -18,6 +18,9 @@ void TreeRenderer::render_node_circle(RenderContext& ctx,
 
 void TreeRenderer::draw() {
   ctx->clear(1, 1, 1);
+  if (!node) {
+    return;
+  }
   draw_tree(*ctx, node, 0, false, 0, ctx->get_width(), -1.f, true);
   draw_tree(*ctx, node, 0, false, 0, ctx->get_width(), -1.f, false);
 }
